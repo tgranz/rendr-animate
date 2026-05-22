@@ -1,0 +1,25 @@
+{
+  "name": "rendr-animate",
+  "version": "0.1.0",
+  "description": "Free and open source web-based animation tool",
+  "homepage": "https://github.com/tgranz/rendr-animate#readme",
+  "bugs": {
+    "url": "https://github.com/tgranz/rendr-animate/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tgranz/rendr-animate.git"
+  },
+  "author": "@tgranz",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vite": "^8.0.12"
+  },
+  "devDependencies": {}
+}

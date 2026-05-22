@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--Meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rendr Animate | New Project</title>
+
+    <!--OG Tags-->
+    <meta property="og:title" content="Rendr Animate: FOSS Web-based Animation Tool">
+    <meta property="og:description" content="Rendr Animate is a free and open source web based animation tool designed for speed and simplicity.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tgranz.github.io/rendr-animate/">
+    <!--<meta property="og:image" content="https://example.com/image.jpg">-->
+
+    <!--Icons and font-->
+    <link rel="icon" href="/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.35.0/dist/tabler-icons.min.css" />
+
+    <!--Stylesheet-->
+    <link rel="stylesheet" href="./styles/main.css">
+</head>
+<body>
+    <main>
+        <header>
+            <div class="menubar">
+                <button class="app-title" id="menu-app">Rendr Animate</button>
+                <button id="menu-file">File</button>
+                <button id="menu-edit">Edit</button>
+                <button id="menu-view">View</button>
+                <button id="menu-help">Help</button>
+            </div>
+            <div class="menubar" id="secondary-menubar">
+                <button id="shortcut-save"><i class="ti ti-device-floppy"></i> Save Project</button>
+            </div>
+            <div id="progress" style="display: none;">
+                <span id="progress-label" class="mono">No tasks</span>
+            </div>
+        </header>
+
+        <div id="top-shell">
+            <div class="panel" id="panel-1">
+                <div class="panel-head">
+                    <button class="panel-selection">
+                        <i class="ti ti-chevron-down"></i>
+                        <span class="panel-title">Toolbox</span>
+                    </button>
+                    <div class="panel-actions"></div>
+                </div>
+                <div class="panel-content"></div>
+            </div>
+
+            <div id="resizer-panel-1" class="panel-resizer"></div>
+
+            <div class="panel" id="panel-2">
+                <div class="panel-head">
+                    <button class="panel-selection">
+                        <i class="ti ti-chevron-down"></i>
+                        <span class="panel-title">Canvas</span>
+                    </button>
+                    <div class="panel-actions"></div>
+                </div>
+                <div class="panel-content"></div>
+            </div>
+
+            <div id="resizer-panel-2" class="panel-resizer"></div>
+
+            <div class="panel" id="panel-3" style="width: 400px;">
+                <div class="panel-head">
+                    <button class="panel-selection">
+                        <i class="ti ti-chevron-down"></i>
+                        <span class="panel-title">Layers</span>
+                    </button>
+                    <div class="panel-actions"></div>
+                </div>
+                <div class="panel-content"></div>
+            </div>
+        </div>
+
+        <div id="resizer-shells"></div>
+
+        <div id="bottom-shell"></div>
+    </main>
+</body>
+
+<script type="module" src="./entry.js"></script>
+</html>

@@ -1,0 +1,51 @@
+/* Toolbox
+
+<div class="toolbox-wrapper">
+    <div class="tool">
+        <i class="ti ti-pencil"></i>
+        <p>Pen</p>
+    </div>
+</div>
+
+*/
+
+.toolbox-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 10px;
+}
+
+.tool {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 0 0 100px;
+    width: 100px;
+    gap: 4px;
+    padding: 8px;
+    background-color: var(--background-color-2);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.tool:hover {
+    background-color: var(--background-color-3);
+}
+
+.tool.selected {
+    border: 1px solid var(--primary-color);
+}
+
+.tool i {
+    font-size: 24px;
+}
+
+.tool p {
+    font-size: 14px;
+    margin: 0;
+}
