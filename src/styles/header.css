@@ -32,6 +32,17 @@ button.app-title {
     font-weight: bolder;
 }
 
+#project-name {
+    font-weight: bold;
+    color: var(--text-dark);
+    margin: 0 8px;
+    cursor: pointer;
+}
+
+#project-name:hover {
+    color: var(--text-main);
+}
+
 #progress {
     --progress: 0%;
     position: relative;

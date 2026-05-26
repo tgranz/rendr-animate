@@ -62,7 +62,7 @@ class CtxMenu {
 		list.className = 'ctx-menu__list';
 
 		for (const item of this.items) {
-			if (item && item.separator) {
+			if (item && (item.separator || item.spacer)) {
 				const separator = document.createElement('li');
 				separator.className = 'ctx-menu__separator';
 				separator.setAttribute('role', 'separator');

@@ -37,6 +37,10 @@ export default class TimelineUI {
         }
 
         this.renderFrames();
+
+        document.addEventListener('sequenceChanged', () => {
+            this.renderFrames();
+        });
     }
 
     _renderToolbar() {
@@ -50,14 +54,51 @@ export default class TimelineUI {
                     window.sequence.setCurrentFrame(nextIndex);
                 }
             },
+            {
+                "title": "Duplicate frame",
+                "icon": "copy",
+                "callback": () => {
+                    const currentIndex = window.sequence.getCurrentFrameIndex();
+                    window.sequence.duplicateFrame(currentIndex);
+                    window.sequence.setCurrentFrame(currentIndex + 1);
+                }
+            },
+            {
+                "title": "spacer"
+            },
+            {
+                "title": "Switch view",
+                "icon": "layout-grid",
+                "callback": () => {}
+            },
+            {
+                "title": "spacer-fill"
+            },
+            {
+                "title": "Settings",
+                "icon": "settings-2",
+                "callback": () => {}
+            }
         ]
 
         buttons.forEach(btnInfo => {
-            const button = document.createElement('button');
-            button.title = btnInfo.title;
-            button.innerHTML = `<i class="ti ti-${btnInfo.icon}"></i>`;
-            button.addEventListener('click', btnInfo.callback);
-            this.toolbar.appendChild(button);
+            if (btnInfo.title === "spacer-fill") {
+                const spacer = document.createElement('div');
+                spacer.classList.add('spacer-fill');
+                this.toolbar.appendChild(spacer);
+                return;
+            } else if (btnInfo.title === "spacer") {
+                const spacer = document.createElement('div');
+                spacer.classList.add('spacer');
+                this.toolbar.appendChild(spacer);
+                return;
+            } else {
+                const button = document.createElement('button');
+                button.title = btnInfo.title;
+                button.innerHTML = `<i class="ti ti-${btnInfo.icon}"></i>`;
+                button.addEventListener('click', btnInfo.callback);
+                this.toolbar.appendChild(button);
+            }
         });
     }
 
@@ -71,41 +112,50 @@ export default class TimelineUI {
             {
                 "title": "Play",
                 "icon": "player-play",
-                "callback": () => { this.togglePlayPause(); }
+                "callback": () => { this.togglePlayPause(); },
+                "class": "play-pause-btn"
             },
             {
                 "title": "Next Frame",
                 "icon": "caret-right",
                 "callback": () => { window.sequence.nextFrame(); }
-            }
+            },
+            {
+                "title": "spacer",
+            },
+            {
+                "title": "Loop",
+                "icon": "repeat",
+                "id": "loop-toggle-btn",
+                "callback": () => { document.getElementById('loop-toggle-btn').classList.toggle('on'); }
+            },
         ]
 
         buttons.forEach(btnInfo => {
-            const button = document.createElement('button');
-            button.title = btnInfo.title;
-            button.innerHTML = `<i class="ti ti-${btnInfo.icon}"></i>`;
-            button.addEventListener('click', btnInfo.callback);
-            this.playbackControls.appendChild(button);
+            if (btnInfo.title === "spacer") {
+                const spacer = document.createElement('div');
+                spacer.classList.add('spacer');
+                this.playbackControls.appendChild(spacer);
+                return;
+            } else if (btnInfo.title === "spacer-fill") {
+                const spacer = document.createElement('div');
+                spacer.classList.add('spacer-fill');
+                this.playbackControls.appendChild(spacer);
+                return;
+            } else {
+                const button = document.createElement('button');
+                button.title = btnInfo.title;
+                button.id = btnInfo.id || '';
+                button.innerHTML = `<i class="ti ti-${btnInfo.icon}"></i>`;
+                if (btnInfo.class) button.classList.add(btnInfo.class);
+                button.addEventListener('click', btnInfo.callback);
+                this.playbackControls.appendChild(button);
+            }
         });
     }
 
     _bindSequenceEvents() {
-        window.addEventListener('sequence:frame-added', () => {
-            this.renderFrames();
-            this._centerCurrentFrameIfAllowed();
-        });
-
-        window.addEventListener('sequence:frame-deleted', () => {
-            this.renderFrames();
-            this._centerCurrentFrameIfAllowed();
-        });
-
-        window.addEventListener('sequence:current-frame-changed', () => {
-            this.renderFrames();
-            this._centerCurrentFrameIfAllowed();
-        });
-
-        window.addEventListener('sequence:frame-updated', () => {
+        document.addEventListener('canvasChanged', () => {
             this.renderFrames();
         });
     }
@@ -172,7 +222,7 @@ export default class TimelineUI {
                 <div class="frame-info">
                     ${index + 1}
                     <div class="frame-icons">
-
+                        ${frame.holdFrames > 1 ? `<i class="ti ti-clock"></i>` : ''}
                     </div>
                 </div>
             `;
@@ -191,6 +241,34 @@ export default class TimelineUI {
         this._centerCurrentFrameIfAllowed();
     }
 
+    _makePlaybackInterval() {
+        document.querySelector('.play-pause-btn').innerHTML = `<i class="ti ti-player-pause"></i>`;
+        const frameDuration = (1000 / window.sequence.frameRate) * (window.sequence.frames[window.sequence.getCurrentFrameIndex()]?.holdFrames || 1);
+        
+        const playInterval = () => {
+            if (window.sequence.getCurrentFrameIndex() < window.sequence.frames.length - 1) {
+                window.sequence.nextFrame();
+            } else {
+                // Loop back to the first frame, in enabled
+                if (document.getElementById('loop-toggle-btn').classList.contains('on')) {
+                    window.sequence.setCurrentFrame(0);
+                } else {
+                    this.togglePlayPause(false);
+                    return;
+                }
+            }
+
+            if (this.playingInterval) {
+                window.clearTimeout(this.playingInterval);
+                this.playingInterval = null;
+            }
+
+            this._makePlaybackInterval();
+        };
+
+        this.playingInterval = window.setTimeout(playInterval, frameDuration);
+    }
+
     togglePlayPause(play = null) {
         const shouldPlay = play === null ? !this.playingInterval : Boolean(play);
 
@@ -200,20 +278,18 @@ export default class TimelineUI {
             }
 
             // Start playback
-            const frameDuration = 1000 / window.sequence.frameRate;
-            this.playingInterval = window.setInterval(() => {
-                if (window.sequence.getCurrentFrameIndex() < window.sequence.frames.length - 1) {
-                    window.sequence.nextFrame();
-                } else {
-                    this.togglePlayPause(false); // Stop at the end of the sequence
-                }
-            }, frameDuration);
+            this._makePlaybackInterval();
+            window.isPlaying = true;
+            window.panels.switchPanels('Canvas', 'Preview');
         } else {
             // Pause playback
             if (this.playingInterval) {
-                window.clearInterval(this.playingInterval);
+                window.clearTimeout(this.playingInterval);
                 this.playingInterval = null;
             }
+            window.isPlaying = false;
+            window.panels.switchPanels('Preview', 'Canvas');
+            document.querySelector('.play-pause-btn').innerHTML = `<i class="ti ti-player-play"></i>`;
         }
     }
 }

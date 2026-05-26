@@ -74,6 +74,19 @@
     display: flex;
     flex-direction: row;
     padding: 4px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.frame-icons {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.frame-icons i {
+    color: var(--primary-color);
+    font-weight: bold;
 }
 
 #timeline #overview {
@@ -91,4 +104,14 @@
     align-items: center;
     justify-content: center;
     width: 100%;
+}
+
+.spacer {
+    border-left: 1px solid var(--background-color-3);
+    height: 24px;
+    margin: 0 8px;
+}
+
+.spacer-fill {
+    flex: 1;
 }

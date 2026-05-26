@@ -92,8 +92,22 @@ button {
     transition: background-color 0.2s ease;
 }
 
+button.on {
+    background-color: var(--primary-color);
+    font-weight: bold;
+}
+
 button:hover {
     background-color: var(--background-color-3);
+}
+
+input[type="number"] {
+    display: inline-block;
+    width: 80px;
+    background: var(--background-color-2);
+    color: var(--text-main);
+    padding: 4px;
+    border-radius: var(--radius);
 }
 
 
