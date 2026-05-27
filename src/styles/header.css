@@ -30,6 +30,13 @@ header {
 
 button.app-title {
     font-weight: bolder;
+    display: flex;
+    align-items: center;
+}
+
+button.app-title img {
+    height: 20px;
+    margin-right: 6px;
 }
 
 #project-name {
